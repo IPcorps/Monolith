@@ -1,12 +1,12 @@
 
 // A few 'require'
 const { src, dest } = require('gulp'),
-    ts = require('gulp-typescript'),
-    terser = require('gulp-terser');
+    ts = require('gulp-typescript');
+    // terser = require('gulp-terser');
 
 // Preparation for acceleration
-let tsOpt = require('../config-ts.js'),
-    tersOpt = require('../config-ters.js');
+let tsOpt = require('../config-ts.js');
+    // tersOpt = require('../config-ters.js');
 
 let tsProject = ts.createProject(tsOpt);
 
@@ -16,7 +16,7 @@ exports.change = path => {
     src(path)                           // Reading the file 
         .pipe(tsProject())              // TypeScript -> JavaScript
         .on('error', console.log)       // For oops caught a mistake 🙀
-        .pipe(terser(tersOpt))          // Javascript minifier and ... what else you want
+        // .pipe(terser(tersOpt))          // Javascript minifier and ... what else you want
         .pipe(dest('.'));               // Saving the file
 
     // To see something happen

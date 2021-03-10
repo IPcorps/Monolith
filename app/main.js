@@ -1,1 +1,0 @@
-"use strict";var text_1="🙈 I`m here! 🙉";document.addEventListener("DOMContentLoaded",(function(){document.body.innerText=text_1})),console.log("And here! 🙊");

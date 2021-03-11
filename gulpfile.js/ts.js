@@ -2,11 +2,11 @@
 // A few 'require'
 const { src, dest } = require('gulp'),
     ts = require('gulp-typescript');
-    // terser = require('gulp-terser');
+    terser = require('gulp-terser');
 
 // Preparation for acceleration
 let tsOpt = require('../config-ts.js');
-    // tersOpt = require('../config-ters.js');
+    tersOpt = require('../config-ters.js');
 
 let tsProject = ts.createProject(tsOpt);
 

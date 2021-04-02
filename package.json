@@ -4,18 +4,23 @@
   "description": "🧱 A framework for developing browser-installed applications with auto-update capability.",
   "main": "index.js",
   "scripts": {
-    "rls": "browser-sync start --config config-bs.js",
     "rfw": "gulp watcher",
-    "all": "start npm run rls && start npm run rfw || npm run rls && npm run rfw"
+    "rls": "browser-sync start --config gulpfile.js/config/config-bs.js",
+    "all": "start npm run rls && start npm run rfw || npm run rls && npm run rfw",
+    "lt": "lt -p 3000 -o"
   },
   "author": "IPcorp",
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "^2.26.14",
     "gulp": "^4.0.2",
-    "gulp-markdown-github-style": "^1.1.1",
+    "gulp-if": "^3.0.0",
+    "gulp-pug": "^4.0.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-stylus": "^2.7.0",
     "gulp-terser": "^2.0.1",
     "gulp-typescript": "^6.0.0-alpha.1",
+    "localtunnel": "^2.0.1",
     "typescript": "^4.2.3"
   }
 }

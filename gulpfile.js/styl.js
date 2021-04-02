@@ -1,16 +1,16 @@
 
 // A few 'require'
 const { src, dest } = require('gulp'),
-    md = require('gulp-markdown-github-style');
+    styl = require('gulp-stylus');
 
-// Preparation for acceleration
-let mdOpt = require('../config-md.js');
+// Configuration preparation
+let stylOpt = require('./config/config-styl.js');
 
 exports.change = path => {
 
-    // md processing
+    // Pug processing
     src(path)                           // Reading the file 
-        .pipe(md(mdOpt))                // md -> html
+        .pipe(styl(stylOpt))            // Stylus -> CSS
         .on('error', console.log)       // For oops caught a mistake 🙀
         .pipe(dest('.'));               // Saving the file
 

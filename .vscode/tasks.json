@@ -1,0 +1,40 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run live server",
+			"type": "npm",
+			"script": "rls",
+			"problemMatcher": [],
+			"presentation": {
+				"group": "dev"
+			}
+		},
+		{
+			"label": "Run files watcher",
+			"type": "npm",
+			"script": "rfw",
+			"problemMatcher": [],
+			"presentation": {
+				"group": "dev"
+			}
+		},
+		{
+			"label": "Run DevEnv",
+			"problemMatcher": [],
+			"dependsOn": [
+				"Run live server",
+				"Run files watcher"
+			]
+		},
+		{
+			"label": "Local tunnel",
+			"type": "npm",
+			"script": "lt",
+			"problemMatcher": [],
+			"presentation": {
+				"group": "dev"
+			}
+		}
+	]
+}

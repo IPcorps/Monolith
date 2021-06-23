@@ -14,6 +14,7 @@
  */
 
 module.exports = {
+    "tunnel": false,
     "ui": {
         "port": 3001
     },
@@ -67,7 +68,7 @@ module.exports = {
     "reloadDebounce": 500,
     "reloadThrottle": 0,
     "plugins": [],
-    "injectChanges": true,
+    "injectChanges": false,
     "startPath": null,
     "minify": false,
     "host": null,

@@ -1,0 +1,9 @@
+{
+	"devMode": true,
+	"contextScripts": [
+		{
+			"name": "DevMode",
+			"path": "./ctx-scripts/devMode.js"
+		}
+	]
+}

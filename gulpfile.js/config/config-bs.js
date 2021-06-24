@@ -30,7 +30,7 @@ module.exports = {
     },
     "server": false,
     "proxy": {
-        target: "http://localhost:3005",
+        target: "http://localhost:3456",
         ws: true
     },
     "port": 3000,
@@ -69,7 +69,7 @@ module.exports = {
     "reloadThrottle": 0,
     "plugins": [],
     "injectChanges": false,
-    "startPath": null,
+    "startPath": "/index.html",
     "minify": false,
     "host": null,
     "localOnly": false,

@@ -4,7 +4,7 @@ import fs from "fs";
 
 http.createServer(function (req, res) {
 
-    const readStream = fs.createReadStream(process.cwd() + "/client/" + (req.url === "/" ? "/index.html" : req.url));
+    const readStream = fs.createReadStream(process.cwd() + req.url);
 
     readStream.on('open', function () {
         readStream.pipe(res);
@@ -14,4 +14,4 @@ http.createServer(function (req, res) {
         res.end(err.toString());
     });
 
-}).listen(3005);
+}).listen(3456);

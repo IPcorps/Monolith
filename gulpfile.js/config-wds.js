@@ -10,13 +10,18 @@ module.exports = {
         // extjs: ".m.js",                      // Server file extensions for the node
         // middle: true                         // Saving an intermediate non-minified file during minification.
     },
+    wp: {
+        use: true,                              // Webpack bundler
+        entry: "app/src/client/wm/index.ts",
+        output: "app/out/client/"
+    },
     node: {
         use: true                               // Server file change watcher
     },
     bs: {
         use: true,                              // Browser-sync
         updConf: {                              // Updating the configuration in development mode
-            "files": ["app/out/client/**/*"]
+            "files": ["app/out/client/**"]
         }
     }
 }

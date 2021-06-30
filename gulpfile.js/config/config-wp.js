@@ -5,8 +5,10 @@
 
 module.exports = {
     mode: "production",
+    entry: "./app/src/client/wm/index.ts",
     output: {
-        filename: "index.js"
+        filename: "./app/out/client/index.js",
+        library: 'AppMono'
     },
     optimization: {
         emitOnErrors: true,
@@ -22,7 +24,8 @@ module.exports = {
                 options: {
                     compilerOptions: {
                         module: "ESNext",
-                        moduleResolution: "node"
+                        moduleResolution: "node",
+                        declaration: true
                     },
                     context: `${process.cwd()}/app/src/client/wm`,
                     logInfoToStdOut: true

@@ -11,9 +11,7 @@ module.exports = {
         // middle: true                         // Saving an intermediate non-minified file during minification.
     },
     wp: {
-        use: true,                              // Webpack bundler
-        entry: "app/src/client/wm/index.ts",
-        output: "app/out/client/"
+        use: true                               // Webpack bundler
     },
     node: {
         use: true                               // Server file change watcher

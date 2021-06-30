@@ -12,7 +12,7 @@ exports.change = path => {
 
     src(wdsOpt.entry)                                   // Entry point
         .pipe(webpackStream(wpOpt, webpack))            // Creating a bundle
-        .on("error", console.log)
+        .on("error", () => console.log)
         .pipe(dest(wdsOpt.output));                     // Saving a bundle
 
     // To see something happen

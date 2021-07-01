@@ -5,10 +5,10 @@
 
 module.exports = {
     mode: "production",
-    entry: "./app/src/client/wm/index.ts",
+    entry: "./app/src/client/wm/mono.ts",
     output: {
-        filename: "./app/out/client/index.js",
-        library: 'AppMono'
+        filename: "./app/out/client/mono.js",
+        libraryTarget: "umd"
     },
     optimization: {
         emitOnErrors: true,

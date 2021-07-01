@@ -21,7 +21,7 @@ exports.change = () => {
 
     // Start/restart node server
     if (node) node.kill();
-    node = fork("../server/wm/monoserv.js", { // Starting the server on the node
+    node = fork("../server/main.js", { // Starting the server on the node
         cwd: process.cwd() + "/app/out/client"
     });
 

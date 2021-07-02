@@ -1,33 +1,33 @@
 
 // A few "require"
-const { src, dest } = require("gulp"),
-    { createProject } = require("gulp-typescript"),
-    terser = require("gulp-terser"),
-    gulpif = require("gulp-if"),
-    gulprename = require("gulp-rename");
+const gulp = require("gulp"),
+    gulpTypescript = require("gulp-typescript"),
+    gulpTerser = require("gulp-terser"),
+    gulpIf = require("gulp-if"),
+    gulpRename = require("gulp-rename");
 
 // Preparation for acceleration
 const wdsOpt = require("./config-wds.js").ts,
     tsOpt = "./tsconfig.json";
 
-const tsProject_req = createProject(tsOpt),
-    tsProject = createProject(tsOpt, { module: "ESNext" });
+const tsProject_req = gulpTypescript.createProject(tsOpt),
+    tsProject = gulpTypescript.createProject(tsOpt, { module: "ESNext" });
 
 exports.change = path => {
 
     // TypeScript processing for require
-    const tsRes = src(path)                                                                 // Reading the file 
+    const tsRes = gulp.src(path)                                                                 // Reading the file 
         .pipe(path.match(/app\\src\\client/) ? tsProject() : tsProject_req())               // TypeScript -> JavaScript
         .on("error", console.log);                                                          // For oops caught a mistake 🙀
 
-    tsRes.js.pipe(gulpif(wdsOpt.middle, dest(".")))                                         // Saving an intermediate file
-        .pipe(gulpif(wdsOpt.mini, terser()))                                                // Javascript minifier and ... what else you want
-        .pipe(gulpif(!!wdsOpt.extjs, gulprename({ extname: wdsOpt.extjs })))                // Output file extension
-        .pipe(gulpif(!!wdsOpt.dirFrom, gulprename(                                          // Checking and setting the path
+    tsRes.js.pipe(gulpIf(wdsOpt.middle, gulp.dest(".")))                                         // Saving an intermediate file
+        .pipe(gulpIf(wdsOpt.mini, gulpTerser()))                                                // Javascript minifier and ... what else you want
+        .pipe(gulpIf(!!wdsOpt.extjs, gulpRename({ extname: wdsOpt.extjs })))                // Output file extension
+        .pipe(gulpIf(!!wdsOpt.dirFrom, gulpRename(                                          // Checking and setting the path
             dir => dir.dirname = dir.dirname.replace(wdsOpt.dirFrom, wdsOpt.dirTo))))
-        .pipe(dest("."));                                                                   // Saving the file
+        .pipe(gulp.dest("."));                                                                   // Saving the file
 
-    if (wdsOpt.dts) tsRes.dts.pipe(dest("."));                                              // Saving the file
+    if (wdsOpt.dts) tsRes.dts.pipe(gulp.dest("."));                                              // Saving the file
 
     // To see something happen
     console.log("\x1B[90m%s \x1b[36mTS %s\x1b[0m", new Date().toLocaleTimeString(), path, "processed");

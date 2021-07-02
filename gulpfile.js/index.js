@@ -10,26 +10,26 @@
 
 // File extension router
 
-const { watch } = require("gulp"),
-    { readFileSync } = require("fs");
+const gulp = require("gulp"),
+    fs = require("fs");
 
 // Configuration preparation
 const wdsOpt = require("./config-wds.js"),
-    devMode = JSON.parse(readFileSync(`${__dirname}/../.vscode/settings.json`).toString()).devMode;
+    devMode = JSON.parse(fs.readFileSync(`${__dirname}/../.vscode/settings.json`).toString()).devMode;
 
 exports.watcher = () => {
 
     // TypeScript -> JavaScript
     if (wdsOpt.ts.use) {
         const ts = require("./ts");
-        watch(["ctx-scripts/**/*.ts", "app/src/**/*.ts", "!app/src/client/wm/**", "!**/*.d.*"])
+        gulp.watch(["ctx-scripts/**/*.ts", "app/src/**/*.ts", "!app/src/client/wm/**", "!**/*.d.*"])
             .on("change", ts.change);
     }
 
     // TypeScript -> JavaScript (webpack)
     if (wdsOpt.wp.use) {
         const wp = require("./wp");
-        watch(["app/src/client/wm/**/*.ts", "!**/*.d.*"])
+        gulp.watch(["app/src/client/wm/**/*.ts", "!**/*.d.*"])
             .on("change", wp.change);
     }
 
@@ -37,7 +37,7 @@ exports.watcher = () => {
     if (wdsOpt.node.use) {
         const node = require("./node");
         node.change();
-        watch(["app/out/server/**/*.js", devMode ? "" : "app/out/client/**/*"])
+        gulp.watch(["app/out/server/**/*.js", devMode ? "" : "app/out/client/**/*"])
             .on("change", node.change);
 
         console.log("\x1B[90m%s \x1b[36m%s\x1b[0m", new Date().toLocaleTimeString(),

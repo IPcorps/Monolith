@@ -11,7 +11,7 @@ module.exports = {
         libraryTarget: "umd"
     },
     optimization: {
-        emitOnErrors: true,
+        emitOnErrors: true
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
@@ -23,8 +23,7 @@ module.exports = {
                 loader: "ts-loader",
                 options: {
                     compilerOptions: {
-                        module: "ESNext",
-                        moduleResolution: "node",
+                        module: "ESnext",
                         declaration: true
                     },
                     context: `${process.cwd()}/app/src/client/wm`,

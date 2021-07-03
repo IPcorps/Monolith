@@ -4,11 +4,12 @@ const childProcess = require("child_process"),
     fs = require("fs"),
     browserSync = require("browser-sync").create();
 
-const wdsOpt = require("./config-wds.js"),
-    bsOpt = require("./config/config-bs.js"),
+// Configuration preparation
+const bsOpt = require("./config/config-bs.js"),
     devMode = JSON.parse(fs.readFileSync(`${__dirname}/../.vscode/settings.json`).toString()).devMode;
 
-if (wdsOpt.bs.use) browserSync.init(devMode ? { ...bsOpt, ...wdsOpt.bs.updConf } : bsOpt);
+// Browser-sync server
+browserSync.init(devMode ? { ...bsOpt, files: ["app/out/client/**"] } : bsOpt);
 
 // Recording the development mode in the settings of the server being started
 const setPath = `${__dirname}/../app/out/server/wm/settings.json`;
@@ -26,7 +27,7 @@ exports.change = () => {
     });
 
     // Update live-server
-    if (wdsOpt.bs.use) browserSync.reload();
+    browserSync.reload();
 
     // To see something happen
     console.log("\x1B[90m%s \x1b[36m%s\x1b[0m", new Date().toLocaleTimeString(), "Node server start/restart");

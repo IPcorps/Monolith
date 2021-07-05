@@ -1,14 +1,14 @@
 
 /**
- * === HTTP SERVER ===
+ * SIMPLE HTTP SERVER
  */
 
 import fs from "fs";
 import sHTTP from "http";
 
-import { Settings } from "./settings";
+import * as appSettings from "./appSettings";
 
-export function create(settings: Settings) {
+export function create() {
 
     return sHTTP.createServer(function (req, res) {
 
@@ -36,6 +36,6 @@ export function create(settings: Settings) {
             'Content-Length': file.length,
         }).end(file);
 
-    }).listen(settings.port);
+    }).listen(appSettings.settings.port);
 
 }

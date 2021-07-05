@@ -1,1 +1,0 @@
-"use strict";var __importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.settings=void 0;const fs_1=__importDefault(require("fs"));exports.settings=JSON.parse(fs_1.default.readFileSync(`${process.cwd()}/../server/wm/settings.json`).toString());

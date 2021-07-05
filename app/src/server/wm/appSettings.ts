@@ -1,6 +1,6 @@
 
 /**
- * === SETTINGS OBJECT ===
+ * APPLICATION SETTINGS
  */
 
 import fs from "fs";

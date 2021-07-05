@@ -1,22 +1,14 @@
 /**
- * === WS SERVER ===
+ * WS SERVER
  */
 
 import socketIO from "socket.io";
 import http from "http";
 
-import { Settings } from "./settings";
 import wsUpd from "./wsUpd";
-import wsUsr from "./wsUsr";
 
-export function create(sHTTP: http.Server, _settings: Settings) {
-
+export function create(sHTTP: http.Server) {
     const sWS = new socketIO.Server(sHTTP);
-
-    sWS.on("connection", (socket: socketIO.Socket) => {
-        [wsUpd, wsUsr].forEach(val => val(sWS, socket));
-    });
-
+    sWS.on("connection", (socket: socketIO.Socket) => wsUpd(sWS, socket));
     return sWS;
-
 }

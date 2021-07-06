@@ -3,19 +3,29 @@
 const gulp = require("gulp"),
     gulpTypescript = require("gulp-typescript"),
     gulpTerser = require("gulp-terser"),
-    gulpRename = require("gulp-rename");
+    gulpRename = require("gulp-rename"),
+    gulpIf = require("gulp-if"),
+    stream = require("stream");
 
 // Preparation for acceleration
-const tsProject = gulpTypescript.createProject("./tsconfig.json");
+const tsProject_C = gulpTypescript.createProject("./tsconfig.json", { module: "ESNext" }),
+    tsProject_S = gulpTypescript.createProject("./tsconfig.json");
 
-exports.change = path => {
+exports.change = (path, client) => {
 
     // TypeScript processing for require
     const tsRes = gulp.src(path)                                                                // Reading the file 
-        .pipe(tsProject())                                                                      // TypeScript -> JavaScript
+        .pipe(client ? tsProject_C() : tsProject_S())                                           // TypeScript -> JavaScript
         .on("error", console.log);                                                              // For oops caught a mistake 🙀
 
     tsRes.js
+        .pipe(gulpIf(client, new stream.Transform({                                             // Delete import
+            objectMode: true,
+            transform(file, _, cb) {
+                file.contents = Buffer.from(file.contents.toString().replace(/^import.*$/mg, ""));
+                cb(null, file);
+            }
+        })))
         // .pipe(gulp.dest("."))                                                                // Saving an intermediate file
         .pipe(gulpTerser())                                                                     // Javascript minifier and ... what else you want
         // .pipe(gulpRename({ extname: ".m.js" }))                                              // Output file extension

@@ -18,10 +18,13 @@ const devMode = JSON.parse(fs.readFileSync(`${__dirname}/../.vscode/settings.jso
 
 exports.watcher = () => {
 
-    // TypeScript -> JavaScript
     const ts = require("./ts");
-    gulp.watch(["ctx-scripts/**/*.ts", "app/src/**/*.ts", "!app/src/client/wm/**", "!**/*.d.*"])
-        .on("change", ts.change);
+    // TypeScript -> JavaScript (client)
+    gulp.watch(["app/src/client/**/*.ts", "!app/src/client/wm/**", "!**/*.d.*"])
+        .on("change", path => ts.change(path, true));
+    // TypeScript -> JavaScript (server)
+    gulp.watch(["ctx-scripts/**/*.ts", "app/src/server/**/*.ts", "!**/*.d.*"])
+        .on("change", path => ts.change(path));
 
     // TypeScript -> JavaScript (webpack)
     const wp = require("./wp");

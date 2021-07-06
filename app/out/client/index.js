@@ -1,1 +1,1 @@
-"use strict";Mono.init();
+Mono.init(),Mono.ws.on("upds:createMap",((o,n)=>{console.log(o),console.log(n)}));

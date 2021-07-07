@@ -3,15 +3,15 @@
  * "upd" EVENTS OF THE WEBSOCKET
  */
 
-import socketIO from "socket.io";
+import mSocketIO from "socket.io";
 
-import * as appSettings from "./appSettings";
-import * as resourcMap from "./resourcMap";
+import * as mAppSettings from "./appSettings";
+import * as mResourcMap from "./resourceMap";
 
 // Called when the client connects to the server
-export default function (_sWS: socketIO.Server, socket: socketIO.Socket) {
+export default function (_sWS: mSocketIO.Server, socket: mSocketIO.Socket) {
 
     // Sending resource metadata and the work flag
-    socket.emit("upds:createMap", appSettings.settings.devMode, resourcMap.arrMetaFiles);
+    socket.emit("upds:createMap", mAppSettings.settings.devMode, mResourcMap.arrMetaFiles);
 
 }

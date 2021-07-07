@@ -3,14 +3,14 @@
  * APPLICATION SCRIPT (SERVER)
  */
 
-import * as monoserv from "./wm/monoserv";
+import * as mMonoserv from "./wm/monoserv";
 
 // HTTP server
-const sHTTP = monoserv.runHTTP();
+const sHTTP = mMonoserv.runHTTP();
 
 // WebSocket  server
 // @ts-ignore
-const sWS = monoserv.runWS(sHTTP);
+const sWS = mMonoserv.runWS(sHTTP);
 
 
 // THE CODE OF THE APPLICATION BEING DEVELOPED

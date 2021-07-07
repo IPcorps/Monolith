@@ -2,13 +2,13 @@
  * WS SERVER
  */
 
-import socketIO from "socket.io";
-import http from "http";
+import mSocketIO from "socket.io";
+import mHttp from "http";
 
-import wsUpd from "./wsUpd";
+import mWsUpd from "./wsUpd";
 
-export function create(sHTTP: http.Server) {
-    const sWS = new socketIO.Server(sHTTP);
-    sWS.on("connection", (socket: socketIO.Socket) => wsUpd(sWS, socket));
+export function create(sHTTP: mHttp.Server) {
+    const sWS = new mSocketIO.Server(sHTTP);
+    sWS.on("connection", (socket: mSocketIO.Socket) => mWsUpd(sWS, socket));
     return sWS;
 }

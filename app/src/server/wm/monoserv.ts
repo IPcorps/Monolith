@@ -3,14 +3,14 @@
  * THE MAIN SERVER MODULE
  */
 
-import http from "http";
+import mHttp from "http";
 
-import * as appSettings from "./appSettings";
-import * as resourcMap from "./resourcMap";
-import * as serverHTTP from "./serverHTTP";
-import * as serverWS from "./serverWS";
+import * as mAppSettings from "./appSettings";
+import * as mResourceMap from "./resourceMap";
+import * as mServerHTTP from "./serverHTTP";
+import * as mServerWS from "./serverWS";
 
-export { appSettings };
-if (!appSettings.settings.devMode) resourcMap.create();
-export const runHTTP = () => serverHTTP.create();
-export const runWS = (sHTTP: http.Server) => serverWS.create(sHTTP);
+export { mAppSettings };
+if (!mAppSettings.settings.devMode) mResourceMap.create();
+export const runHTTP = () => mServerHTTP.create();
+export const runWS = (sHTTP: mHttp.Server) => mServerWS.create(sHTTP);

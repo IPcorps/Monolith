@@ -1,8 +1,11 @@
 /**
  * THE MAIN CLIENT MODULE
  */
-import * as sio from "socket.io-client";
-export declare namespace Mono {
-    const ws: sio.Socket<import("socket.io-client/build/typed-events").DefaultEventsMap, import("socket.io-client/build/typed-events").DefaultEventsMap>;
-    function init(): void;
+import * as mSio from "socket.io-client";
+import mDexie from "dexie";
+export declare namespace MONO {
+    export import mWS = mSio;
+    const wsMono: mWS.Socket<import("socket.io-client/build/typed-events").DefaultEventsMap, import("socket.io-client/build/typed-events").DefaultEventsMap>;
+    export import mDX = mDexie;
+    const dxMono: mDX;
 }

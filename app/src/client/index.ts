@@ -3,13 +3,14 @@
  * APPLICATION SCRIPT (CLIENT)
  */
 
-import { Mono } from "./wm/mono";
+import { MONO } from "./wm/mono";
 
-// Initializing and connecting a socket connection
-Mono.init();
+// Initializing and connecting a socket
+MONO.wsMono.on("connect", async () => console.log("The socket is connected"));
 
-// THE CODE OF THE APPLICATION BEING DEVELOPED
-Mono.ws.on("upds:createMap", (devMode, arrMetaFiles) => {
+// The first data of the server response: the operating mode and the resource map
+MONO.wsMono.on("upds:createMap", (devMode, arrMetaFiles) => {
     console.log(devMode);
     console.log(arrMetaFiles);
 });
+

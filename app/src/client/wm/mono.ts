@@ -3,24 +3,18 @@
  * THE MAIN CLIENT MODULE
  */
 
-import * as sio from "socket.io-client";
+import * as mSio from "socket.io-client";
+import mDexie from "dexie";
 
 // Library namespace
-export namespace Mono {
+export namespace MONO {
 
     // Connection socket
-    export const ws = sio.io();
+    export import mWS = mSio;
+    export const wsMono = mSio.io();
 
-    // Initializing and connecting a socket
-    export function init() {
-        ws.on("connect", async () => console.log("The socket is connected"));
-    }
-
-    // The first data of the server response: the operating mode and the resource map
-    ws.on("upds:createMap", (devMode, arrMetaFiles) => {
-        console.log(devMode);
-        console.log(arrMetaFiles);
-    });
+    // Wrapper for IndexedDB
+    export import mDX = mDexie;
+    export const dxMono = new mDexie("MonoUPD");
 
 }
-

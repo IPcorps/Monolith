@@ -14,7 +14,7 @@ const gulp = require("gulp"),
     fs = require("fs");
 
 // Configuration preparation
-const devMode = JSON.parse(fs.readFileSync(`${__dirname}/../.vscode/settings.json`).toString()).devMode;
+const gSettings = JSON.parse(fs.readFileSync(`${__dirname}/../.vscode/settings.json`).toString());
 
 exports.watcher = () => {
 
@@ -34,9 +34,9 @@ exports.watcher = () => {
     // Server file change watcher
     const node = require("./node");
     node.change();
-    gulp.watch(["app/out/server/**/*.js", devMode ? "" : "app/out/client/**/*"])
+    gulp.watch(["app/out/server/**/*.js", gSettings.devMode ? "" : "app/out/client/**/*"])
         .on("change", node.change);
     console.log("\x1B[90m%s \x1b[36m%s\x1b[0m", new Date().toLocaleTimeString(),
-        `<<< ${devMode ? "DEVELOPMENT" : "PRODUCTION"} MODE >>>`);
+        `<<< ${gSettings.devMode ? "DEVELOPMENT" : "PRODUCTION"} MODE ON ${gSettings.https ? "HttpS" : "Http"} >>>`);
 
 };

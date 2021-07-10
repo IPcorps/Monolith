@@ -5,16 +5,18 @@ const childProcess = require("child_process"),
     browserSync = require("browser-sync").create();
 
 // Configuration preparation
-const bsOpt = require("./config/config-bs.js"),
-    devMode = JSON.parse(fs.readFileSync(`${__dirname}/../.vscode/settings.json`).toString()).devMode;
+let bsOpt = require("./config/config-bs.js");
+const gSettings = JSON.parse(fs.readFileSync(`${__dirname}/../.vscode/settings.json`).toString());
 
 // Browser-sync server
-browserSync.init(devMode ? { ...bsOpt, files: ["app/out/client/**"] } : bsOpt);
+if (gSettings.devMode) bsOpt = { ...bsOpt, files: ["app/out/client/**"] };
+if (gSettings.https) bsOpt = { ...bsOpt, proxy: { target: bsOpt.proxy.target.replace("http", "https") } };
+browserSync.init(bsOpt);
 
-// Recording the development mode in the settings of the server being started
+// Copying global settings to the settings of the server being started
 const setPath = `${__dirname}/../app/out/server/wm/settings.json`;
 let settings = JSON.parse(fs.readFileSync(setPath).toString());
-fs.writeFileSync(setPath, JSON.stringify({ ...settings, devMode }, null, "\t"));
+fs.writeFileSync(setPath, JSON.stringify({ ...settings, https: gSettings.https, devMode: gSettings.devMode }, null, "\t"));
 
 let node;
 

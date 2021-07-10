@@ -1,9 +1,10 @@
 {
-	"devMode": true,
+	"https": false,
+	"devMode": false,
 	"contextScripts": [
 		{
-			"name": "DevMode",
-			"path": "./ctx-scripts/devMode.js"
+			"name": "Manage",
+			"path": "./ctx-scripts/manage.js"
 		}
 	]
 }

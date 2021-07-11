@@ -29,8 +29,12 @@ module.exports = {
     },
     server: false,
     proxy: {
-        target: "http://localhost:3456",
+        target: "https://localhost:3456",
         ws: true
+    },
+    https: {
+        key: "app/out/server/crt/localhost.d.key",
+        cert: "app/out/server/crt/localhost.crt"
     },
     port: 3000,
     middleware: false,

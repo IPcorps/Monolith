@@ -13,9 +13,8 @@ export function create() {
 
     let server: typeof mHttpS | typeof mHttp = mHttpS;
     let options: mHttpS.ServerOptions = {
-        key: mFs.readFileSync("../server/crt/localhost.key"),
+        key: mFs.readFileSync("../server/crt/localhost.d.key"),
         cert: mFs.readFileSync("../server/crt/localhost.crt"),
-        passphrase: "pass"
     };
     if (!mAppSettings.settings.https) { server = mHttp; options = {}; }
 

@@ -10,7 +10,7 @@ const gSettings = JSON.parse(fs.readFileSync(`${__dirname}/../.vscode/settings.j
 
 // Browser-sync server
 if (gSettings.devMode) bsOpt = { ...bsOpt, files: ["app/out/client/**"] };
-if (gSettings.https) bsOpt = { ...bsOpt, proxy: { target: bsOpt.proxy.target.replace("http", "https") } };
+if (gSettings.https) bsOpt = { ...bsOpt, proxy: { ...bsOpt.proxy, target: bsOpt.proxy.target.replace("http", "https") } };
 browserSync.init(bsOpt);
 
 // Copying global settings to the settings of the server being started

@@ -1,4 +1,5 @@
 {
 	"port": 3456,
-	"devMode": true
+	"https": true,
+	"devMode": false
 }

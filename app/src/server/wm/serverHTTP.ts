@@ -1,16 +1,25 @@
 
 /**
- * SIMPLE HTTP SERVER
+ * SIMPLE HTTP/HTTPS SERVER
  */
 
 import mFs from "fs";
+import mHttpS from "https";
 import mHttp from "http";
 
 import * as mAppSettings from "./appSettings";
 
 export function create() {
 
-    return mHttp.createServer(function (req, res) {
+    let server: typeof mHttpS | typeof mHttp = mHttpS;
+    let options: mHttpS.ServerOptions = {
+        key: mFs.readFileSync("../server/crt/localhost.key"),
+        cert: mFs.readFileSync("../server/crt/localhost.crt"),
+        passphrase: "pass"
+    };
+    if (!mAppSettings.settings.https) { server = mHttp; options = {}; }
+
+    return server.createServer(options, (req, res) => {
 
         let file: Buffer,
             type: string;
@@ -32,8 +41,8 @@ export function create() {
         }
 
         res.writeHead(200, {
-            'Content-Type': type,
-            'Content-Length': file.length,
+            "Content-Type": type,
+            "Content-Length": file.length,
         }).end(file);
 
     }).listen(mAppSettings.settings.port);

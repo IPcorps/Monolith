@@ -8,7 +8,7 @@ import * as mMonoserv from "./wm/monoserv";
 // HTTP server
 const sHTTP = mMonoserv.runHTTP();
 
-// WebSocket  server
+// WebSocket server
 // @ts-ignore
 const sWS = mMonoserv.runWS(sHTTP);
 

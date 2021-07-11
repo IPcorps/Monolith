@@ -1,5 +1,5 @@
 {
-	"https": false,
+	"https": true,
 	"devMode": false,
 	"contextScripts": [
 		{

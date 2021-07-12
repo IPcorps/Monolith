@@ -1,4 +1,5 @@
 {
+	"miniTs": true,
 	"https": true,
 	"devMode": false,
 	"contextScripts": [

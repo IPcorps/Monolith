@@ -5,11 +5,13 @@ const gulp = require("gulp"),
     gulpTerser = require("gulp-terser"),
     gulpRename = require("gulp-rename"),
     gulpIf = require("gulp-if"),
+    fs = require("fs"),
     stream = require("stream");
 
 // Preparation for acceleration
 const tsProject_C = gulpTypescript.createProject("./tsconfig.json", { module: "ESNext" }),
-    tsProject_S = gulpTypescript.createProject("./tsconfig.json");
+    tsProject_S = gulpTypescript.createProject("./tsconfig.json"),
+    gSettings = JSON.parse(fs.readFileSync(`${__dirname}/../.vscode/settings.json`).toString());
 
 exports.change = (path, client) => {
 
@@ -27,7 +29,7 @@ exports.change = (path, client) => {
             }
         })))
         // .pipe(gulp.dest("."))                                                                // Saving an intermediate file
-        .pipe(gulpTerser())                                                                     // Javascript minifier and ... what else you want
+        .pipe(gulpIf(gSettings.miniTs, gulpTerser()))                                           // Javascript minifier and ... what else you want
         // .pipe(gulpRename({ extname: ".m.js" }))                                              // Output file extension
         .pipe(gulpRename(dir => dir.dirname = dir.dirname.replace("app\\src", "app\\out")))     // Setting the output path
         .pipe(gulp.dest("."));                                                                  // Saving the file

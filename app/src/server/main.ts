@@ -12,7 +12,5 @@ const sHTTP = mMonoserv.runHTTP();
 // @ts-ignore
 const sWS = mMonoserv.runWS(sHTTP);
 
-
 // THE CODE OF THE APPLICATION BEING DEVELOPED
 // sWS.on(...)
-

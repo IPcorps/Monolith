@@ -23,14 +23,13 @@ module.exports = {
                 loader: "ts-loader",
                 options: {
                     compilerOptions: {
-                        module: "ESnext",
-                        declaration: true
+                        module: "ESnext"
                     },
                     context: `${process.cwd()}/app/src/client/wm`,
                     logInfoToStdOut: true
                 },
                 exclude: /node_modules/
             }
-        ],
+        ]
     }
 }

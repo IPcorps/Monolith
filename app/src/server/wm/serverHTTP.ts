@@ -8,6 +8,7 @@ import mHttpS from "https";
 import mHttp from "http";
 
 import * as mAppSettings from "./appSettings";
+import * as mMime from "./mime";
 
 export function create() {
 
@@ -23,20 +24,16 @@ export function create() {
         let file: Buffer,
             type: string;
 
-        switch (req.url) {
-            case "/":
-                file = mFs.readFileSync(`${process.cwd()}/index.html`);
-                type = "text/html";
-                break;
-            case "/index.css":
-                file = mFs.readFileSync(`${process.cwd()}/index.css`);
-                type = "text/css";
-                break;
-            default:
-                if (!mFs.existsSync(process.cwd() + req.url)) return;
-                file = mFs.readFileSync(process.cwd() + req.url);
-                type = "text/javascript";
-                break;
+        if (req.url === "/") req.url = "/index.html";
+        const path = process.cwd() + req.url;
+
+        if (mFs.existsSync(path)) {
+            file = mFs.readFileSync(path);
+            const ext = path.match(/[^.]*$/)?.[0];
+            type = mMime.mime[ext ? ext : ""] as string;
+        } else {
+            file = Buffer.from("Hmm...something strange has happened &#129300");
+            type = "text/html";
         }
 
         res.writeHead(200, {

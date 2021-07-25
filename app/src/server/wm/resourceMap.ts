@@ -23,7 +23,7 @@ export function create() {
             else {
                 const fStats = mFs.statSync(path);
                 arrMetaFiles.push({
-                    n: path,
+                    n: path.substr(2),
                     s: fStats.size,
                     t: fStats.mtimeMs
                 });

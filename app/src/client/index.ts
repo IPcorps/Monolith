@@ -11,23 +11,23 @@ import { MONO } from "./wm/mono";
 //      - MONO.mWS to create your own web socket connection
 //      - MONO.mDX to create your own IndexedDB database
 
-document.addEventListener("DOMContentLoaded", async () => {
-
-    // A SERVICE WORKER FOR LAUNCHING THE APPLICATION IN OFFLINE MODE
-    await navigator.storage.persist();
-    await navigator.serviceWorker.register("sw.js");
+(async () => {
 
     /**
      * STEP 1. CREATING A MONO WEB SOCKET CONNECTION TO THE RESOURCE SERVER AND GETTING A RESOURCE MAP
      */
     // @ts-ignore
-    const ws = await MONO.initWS();
+    const ws = await MONO.initWS().catch(console.log);
+
+    if (!ws) console.log("ws: offline mode");
 
     // 2. Here it also becomes possible to use:
     //      - MONO.wsMono or the returned result for requests to the resource server via the Mono working socket
     //      - MONO.paramsWS an object with data received from the server
     //          - MONO.paramsWS.devMode to get the application operation mode (development/production)
     console.log("MONO.paramsWS.devMode:", MONO.paramsWS.devMode);
+    //          - MONO.paramsWS.online network availability
+    console.log("MONO.paramsWS.online:", MONO.paramsWS.online);
     //          - MONO.paramsWS.arrMetaFiles full map of server resource metadata (IMeta[])
     console.log("MONO.paramsWS.arrMeta:", MONO.paramsWS.arrMeta);
 
@@ -35,7 +35,9 @@ document.addEventListener("DOMContentLoaded", async () => {
      * STEP 2. READING (CREATING) A MONO INDEXEDDB DATABASE AND UPDATING (CREATING) A RESOURCE MAP WITH A STATUS FLAG
      */
     // @ts-ignore
-    const dx = await MONO.initDX();
+    const dx = await MONO.initDX().catch(console.log);
+
+    if (!dx) console.log("dx: offline mode");
 
     // 3. Here it also becomes possible to use:
     //      - MONO.dxMono or the returned result for accessing the mono database, which is called "Mono"
@@ -62,7 +64,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Starting the update process
-    await MONO.updateMono();
+    const upd = await MONO.updateMono().catch(console.log);
+
+    if (!upd) console.log("upd: offline mode");
 
     // 5. Here the updated data in indexeddb becomes available, and in addition:
     //      - MONO.paramsUpd.sizeRes the size of resources in IndexedDB (excluding overhead)
@@ -75,4 +79,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     // They will become available after the next resource update in the object received by calling MONO.getInfo())
     console.log(await MONO.getInfo());
 
-});
+})();

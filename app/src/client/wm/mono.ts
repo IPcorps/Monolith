@@ -6,12 +6,17 @@
 import * as mSio from "socket.io-client";
 import mDexie from "dexie";
 
+// A SERVICE WORKER FOR LAUNCHING THE APPLICATION IN OFFLINE MODE
+navigator.storage.persist().then(() => navigator.serviceWorker.register("sw.js"));
+
 // Library namespace
 export namespace MONO {
 
     // Connection socket
     export import mWS = mSio;
-    export const wsMono = mSio.io();
+    export const wsMono = mSio.io({
+        reconnection: false
+    });
 
     // Wrapper for IndexedDB
     export import mDX = mDexie;
@@ -26,18 +31,28 @@ export namespace MONO {
     }
 
     // Result of a request to the resource server
-    export const paramsWS: { devMode: boolean, arrMeta: IMeta[] } = {
+    export const paramsWS: { devMode: boolean, online: boolean, arrMeta: IMeta[] } = {
         devMode: false,
+        online: false,
         arrMeta: []
     }
 
     // Creating a web socket connection to the resource server and getting a resource map
     export function initWS(): Promise<mWS.Socket> {
 
-        return new Promise(res => {
+        return new Promise((res, rej) => {
 
             // Initializing and connecting a socket
-            wsMono.on("connect", () => console.log(">>> The socket is connected"));
+            wsMono.on("connect", () => {
+                paramsWS.online = true;
+                console.log(">>> The socket is connected")
+            });
+
+            // No connection, offline mode
+            wsMono.on("connect_error", () => {
+                paramsWS.online = false;
+                rej(">>> Offline mode")
+            });
 
             // The first data of the server response: the operating mode and the resource map
             wsMono.on("upds:createMap", (pDevMode: boolean, pArrMeta: IMeta[]) => {
@@ -75,6 +90,8 @@ export namespace MONO {
     export async function initDX(): Promise<mDX> {
 
         dxMono.version(1).stores({ monoRes: "n" });
+
+        if (!paramsWS.online) throw ">>> IDB in offline mode";
 
         const arrMap = await dxMono.table<IMap>("monoRes").toArray();
         const arrMeta = paramsWS.arrMeta as IMap[];
@@ -168,9 +185,11 @@ export namespace MONO {
         cb: undefined
     };
 
-    export function updateMono(): Promise<void> {
+    export function updateMono(): Promise<string> {
 
         return new Promise(res => {
+
+            if (!paramsWS.online) throw ">>> Not updated in offline mode";
 
             console.log(">>> The application update process has started");
 
@@ -192,7 +211,7 @@ export namespace MONO {
 
                 } else if (el.e === eStatus.DELETE) await tblMonoRes.delete(el.n);
 
-                if (i == arr.length - 1) res();
+                if (i == arr.length - 1) res("OK");
 
             });
 
@@ -206,7 +225,7 @@ export namespace MONO {
 
     // Object of application information and storage quotas
     export function getInfo() {
-        return get("./info.json").then(blob => blob.text()).then(JSON.parse)
+        return get("info.json").then(blob => blob.text()).then(JSON.parse)
             .then(oInfo => navigator.storage.estimate().then(data => ({ ...oInfo, ...data, sizeRes: paramsUpd.sizeRes })));
     }
 

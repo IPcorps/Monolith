@@ -6,8 +6,9 @@ const sw = self as typeof self & ServiceWorkerGlobalScope;
 sw.skipWaiting();
 sw.addEventListener("fetch", (fe: FetchEvent) => {
 
-    const arrRes = ["", "manifest.json", "index.css", "mono.js", "index.js", "sw.js", "favicon.ico"];
-    const path = fe.request.url.split("/").pop()!;
+    const path = new URL(fe.request.url).pathname.substr(1);
+    const arrRes = ["", "manifest.json", "index.css", "mono.js", "index.js", "sw.js",
+        "ico/on.ico", "ico/off.ico", "ico/logo.jpg", "ico/logo_512.png"];
 
     if (fe.request.method === "GET" && arrRes.includes(path)) fe.respondWith((() => getRes(path))());
 
@@ -27,7 +28,7 @@ function getRes(path: string) {
                 req.onsuccess = () => {
                     if (req.result) {
                         const blob = req.result.d as Blob;
-                        blob.text().then(data => {
+                        blob.arrayBuffer().then(data => {
                             res(new Response(data, {
                                 headers: { "Content-Type": blob.type }
                             }));

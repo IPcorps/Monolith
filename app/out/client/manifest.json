@@ -1,0 +1,24 @@
+{
+    "name": "WebMonolith",
+    "short_name": "WebMono",
+    "description": "An application that is loaded into the browser",
+    "start_url": "https://localhost:3000",
+    "theme_color": "#000000",
+    "background_color": "#000000",
+    "display": "standalone",
+    "orientation": "landscape-primary",
+    "icons": [
+        {
+            "src": "ico/logo_512.png",
+            "type": "image/png",
+            "sizes": "128x128 256x256 512x512"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "ico/logo.jpg",
+            "type": "image/jpeg",
+            "sizes": "850x460"
+        }
+    ]
+}

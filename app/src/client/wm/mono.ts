@@ -6,9 +6,6 @@
 import * as mSio from "socket.io-client";
 import mDexie from "dexie";
 
-// A SERVICE WORKER FOR LAUNCHING THE APPLICATION IN OFFLINE MODE
-navigator.storage.persist().then(() => navigator.serviceWorker.register("sw.js"));
-
 // Library namespace
 export namespace MONO {
 
@@ -45,13 +42,15 @@ export namespace MONO {
             // Initializing and connecting a socket
             wsMono.on("connect", () => {
                 paramsWS.online = true;
-                console.log(">>> The socket is connected")
+                console.log(">>> The socket is connected");
+                setIcon("ico/on.ico");
             });
 
             // No connection, offline mode
             wsMono.on("connect_error", () => {
                 paramsWS.online = false;
-                rej(">>> Offline mode")
+                rej(">>> Offline mode");
+                setIcon("ico/off.ico");
             });
 
             // The first data of the server response: the operating mode and the resource map
@@ -223,10 +222,24 @@ export namespace MONO {
 
     // === Additional functionality ===================================================================
 
+    // A service worker for launching the application in offline mode
+    export function setSW() {
+        navigator.storage.persist().then(() => navigator.serviceWorker.register("sw.js"));
+    }
+
     // Object of application information and storage quotas
     export function getInfo() {
         return get("info.json").then(blob => blob.text()).then(JSON.parse)
             .then(oInfo => navigator.storage.estimate().then(data => ({ ...oInfo, ...data, sizeRes: paramsUpd.sizeRes })));
+    }
+
+    // Setting the icon for displaying the online/offline mode of the application
+    async function setIcon(path: string) {
+        const el: HTMLAnchorElement = document.querySelector("link[rel='icon']")!;
+        el.rel = "icon";
+        el.href = path;
+        el.type = "image/x-icon";
+        document.getElementsByTagName("head")[0]!.appendChild(el);
     }
 
     // ================================================================================================

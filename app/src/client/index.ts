@@ -72,6 +72,10 @@ import { MONO } from "./wm/mono";
     //      - MONO.paramsUpd.sizeRes the size of resources in IndexedDB (excluding overhead)
     console.log("MONO.paramsUpd.sizeRes:", MONO.paramsUpd.sizeRes);
 
+    // If the operation of the application after installation does not require the Internet,
+    // it is possible to install a service worker for full offline work.
+    MONO.setSW();
+
     // >>> FROM THIS MOMENT ON, THE ENVIRONMENT IS RELEVANT AND THE APPLICATION CODE CAN BE WRITTEN <<<
 
     // Getting an object of information about the application and quotas

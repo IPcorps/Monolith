@@ -72,6 +72,10 @@ import { MONO } from "./wm/mono";
     //      - MONO.paramsUpd.sizeRes the size of resources in IndexedDB (excluding overhead)
     console.log("MONO.paramsUpd.sizeRes:", MONO.paramsUpd.sizeRes);
 
+    /**
+     * STEP 4. SETTING UP A SERVICE WORKER
+     */
+
     // If the operation of the application after installation does not require the Internet,
     // it is possible to install a service worker for full offline work.
     MONO.setSW();

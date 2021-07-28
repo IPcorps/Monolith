@@ -90,8 +90,6 @@ export namespace MONO {
 
         dxMono.version(1).stores({ monoRes: "n" });
 
-        if (!paramsWS.online) throw ">>> IDB in offline mode";
-
         const arrMap = await dxMono.table<IMap>("monoRes").toArray();
         const arrMeta = paramsWS.arrMeta as IMap[];
 
@@ -126,8 +124,9 @@ export namespace MONO {
 
             }
 
-            // There are no matches, set the status in Map to delete
-            if (!paramsWS.devMode) elMap.e = eStatus.DELETE;
+            // There are no matches, set the status in Map to delete,
+            // if the arrMeta has no length, the application is in development mode or offline
+            elMap.e = arrMeta.length ? eStatus.DELETE : eStatus.DONE;
 
         }
 
@@ -140,11 +139,66 @@ export namespace MONO {
         // Creating the final update map
         paramsDX.arrMap = [...arrMap, ...arrMeta];
 
-        console.log(">>> An array was created to update the application");
+        if (paramsWS.online && !paramsWS.devMode)
+            console.log(">>> Data has been created for updating the application");
 
         return dxMono;
 
     }
+
+    // - UPDATE INDEXEDDB
+
+    // Update progress
+    export const paramsUpd: {
+        sizeProgress: number, sizeUpd: number, sizeRes: number,
+        cb: undefined | ((sizeProgress: number, sizeUpd: number) => void)
+    } = {
+        sizeProgress: 0,
+        sizeUpd: 0,
+        sizeRes: 0,
+        cb: undefined
+    };
+
+    export function updateMono(): Promise<string> {
+
+        return new Promise((res, rej) => {
+
+            if (paramsWS.online && !paramsWS.devMode)
+                console.log(">>> The application update process has started");
+
+            const tblMonoRes = dxMono.table<Partial<IMap>>("monoRes");
+            paramsUpd.sizeUpd = paramsDX.sizeUpd;
+
+            paramsDX.arrMap.forEach(async (el, i, arr) => {
+
+                if (el.e !== eStatus.DELETE) paramsUpd.sizeRes += el.s;
+
+                if (el.e === eStatus.INSERT || el.e === eStatus.UPDATE) {
+
+                    const blob = await getSrv(el.n);
+                    el.e === eStatus.INSERT ?
+                        await tblMonoRes.add({ n: el.n, s: el.s, t: el.t, d: blob }) :
+                        await tblMonoRes.update(el.n, { s: el.s, t: el.t, d: blob });
+                    paramsUpd.sizeProgress += el.s;
+                    if (paramsUpd.cb) paramsUpd.cb(paramsUpd.sizeProgress, paramsUpd.sizeUpd);
+
+                } else if (el.e === eStatus.DELETE) await tblMonoRes.delete(el.n);
+
+                if (i == arr.length - 1) {
+                    if (paramsWS.online && !paramsWS.devMode)
+                        console.log(">>> The application update process is completed");
+                    res("OK")
+                };
+
+            });
+
+            if (!paramsDX.arrMap.length) rej(">>> Development mode or there is no data in IndexedDB");
+
+        })
+
+    }
+
+    // ================================================================================================
 
     // === Loader =====================================================================================
 
@@ -167,55 +221,6 @@ export namespace MONO {
     // Getting a file depending on the operating mode (development/production)
     export function get(path: string) {
         return paramsWS.devMode ? getSrv(path) : getIdb(path);
-    }
-
-    // ================================================================================================
-
-    // - UPDATE INDEXEDDB
-
-    // Update progress
-    export const paramsUpd: {
-        sizeProgress: number, sizeUpd: number, sizeRes: number,
-        cb: undefined | ((sizeProgress: number, sizeUpd: number) => void)
-    } = {
-        sizeProgress: 0,
-        sizeUpd: 0,
-        sizeRes: 0,
-        cb: undefined
-    };
-
-    export function updateMono(): Promise<string> {
-
-        return new Promise(res => {
-
-            if (!paramsWS.online) throw ">>> Not updated in offline mode";
-
-            console.log(">>> The application update process has started");
-
-            const tblMonoRes = dxMono.table<Partial<IMap>>("monoRes");
-            paramsUpd.sizeUpd = paramsDX.sizeUpd;
-
-            paramsDX.arrMap.forEach(async (el, i, arr) => {
-
-                if (el.e !== eStatus.DELETE) paramsUpd.sizeRes += el.s;
-
-                if (el.e === eStatus.INSERT || el.e === eStatus.UPDATE) {
-
-                    const blob = await getSrv(el.n);
-                    el.e === eStatus.INSERT ?
-                        await tblMonoRes.add({ n: el.n, s: el.s, t: el.t, d: blob }) :
-                        await tblMonoRes.update(el.n, { s: el.s, t: el.t, d: blob });
-                    paramsUpd.sizeProgress += el.s;
-                    if (paramsUpd.cb) paramsUpd.cb(paramsUpd.sizeProgress, paramsUpd.sizeUpd);
-
-                } else if (el.e === eStatus.DELETE) await tblMonoRes.delete(el.n);
-
-                if (i == arr.length - 1) res("OK");
-
-            });
-
-        })
-
     }
 
     // ================================================================================================

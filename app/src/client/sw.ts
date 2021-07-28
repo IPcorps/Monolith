@@ -8,13 +8,14 @@ sw.addEventListener("fetch", (fe: FetchEvent) => {
 
     const path = new URL(fe.request.url).pathname.substr(1);
     const arrRes = ["", "manifest.json", "index.css", "mono.js", "index.js", "sw.js",
-        "ico/on.ico", "ico/off.ico", "ico/logo.jpg", "ico/logo_512.png"];
+        "ico/on.ico", "ico/off.ico", "ico/logo.png", "ico/logo_512.png"];
 
     if (fe.request.method === "GET" && arrRes.includes(path)) fe.respondWith((() => getRes(path))());
 
 });
 
 function getRes(path: string) {
+
     return new Promise<Response>(res => {
 
         if (path === "") path = "index.html";
@@ -51,4 +52,5 @@ function getRes(path: string) {
         }
 
     })
+
 }

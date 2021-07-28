@@ -16,7 +16,6 @@ import { MONO } from "./wm/mono";
     /**
      * STEP 1. CREATING A MONO WEB SOCKET CONNECTION TO THE RESOURCE SERVER AND GETTING A RESOURCE MAP
      */
-    // @ts-ignore
     const ws = await MONO.initWS().catch(console.log);
 
     if (!ws) console.log("ws: offline mode");
@@ -37,8 +36,6 @@ import { MONO } from "./wm/mono";
     // @ts-ignore
     const dx = await MONO.initDX().catch(console.log);
 
-    if (!dx) console.log("dx: offline mode");
-
     // 3. Here it also becomes possible to use:
     //      - MONO.dxMono or the returned result for accessing the mono database, which is called "Mono"
     //      - MONO.paramsDX intermediate data object
@@ -53,6 +50,7 @@ import { MONO } from "./wm/mono";
 
     // Configuring the callback function that tracks the update progress via the MONO.paramsUpd settings object
     MONO.paramsUpd.cb = (sizeProgress, sizeUpd) => {
+
         console.log(`Received ${sizeProgress} out of ${sizeUpd}`);
 
         // 4. Direct access to the download progress variables is also possible here
@@ -64,9 +62,8 @@ import { MONO } from "./wm/mono";
     }
 
     // Starting the update process
+    // @ts-ignore
     const upd = await MONO.updateMono().catch(console.log);
-
-    if (!upd) console.log("upd: offline mode");
 
     // 5. Here the updated data in indexeddb becomes available, and in addition:
     //      - MONO.paramsUpd.sizeRes the size of resources in IndexedDB (excluding overhead)

@@ -55,7 +55,7 @@ module.exports = {
     logFileChanges: true,
     logSnippet: true,
     rewriteRules: [],
-    open: "local",
+    open: false,
     browser: "default",
     cors: false,
     xip: false,

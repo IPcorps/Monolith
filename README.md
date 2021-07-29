@@ -6,7 +6,11 @@
 
 </ins></div>
 
-Currently implemented and in the process of testing:
+Goals:
+- a framework that will allow you to run web applications with a large amount of resources, with their pre-installation in the browser's IndexedDB storage (by analogy with ordinary PC applications)
+- if the application does not require the Internet after its installation, the ability to run it offline.
+
+Implemented and in the testing process:
 
 1. Loading all application resources into IndexedDB and then auto-updating them. During subsequent connections, only the basic framework is loaded from the network.
 2. For applications that do not require the Internet for their operation, it is possible to install Service Worker. In this case, after the first download of the application and resources, the application has the opportunity to start and work in the complete absence of the Internet.

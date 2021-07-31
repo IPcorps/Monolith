@@ -23,9 +23,10 @@ function getRes(path: string) {
         const idb = indexedDB.open("Mono");
         idb.onsuccess = () => {
 
+            // Reading from IndexedDB
             const db = idb.result;
             if (db.objectStoreNames.length) {
-                const req = idb.result.transaction("monoRes", "readonly").objectStore("monoRes").get(path);
+                const req = db.transaction("monoRes", "readonly").objectStore("monoRes").get(path);
                 req.onsuccess = () => {
                     if (req.result) {
                         const blob = req.result.d as Blob;
@@ -34,20 +35,20 @@ function getRes(path: string) {
                                 headers: { "Content-Type": blob.type }
                             }));
                         });
-                    } else {
-                        res(new Response("Hmm...somewhere that got lost on the way &#129300 maybe a bug", {
-                            headers: { "Content-Type": "text/html" }
-                        }));
-                    }
+                    } else fromNet(path);
                 }
-            } else {
+            } else fromNet(path);
+
+            // Downloading from the Internet
+            function fromNet(path: string) {
                 db.close();
                 fetch(path)
                     .then(res)
-                    .catch(() => res(new Response("Hmm...perhaps there is no internet &#129300", {
+                    .catch(() => res(new Response(`Hmm...something strange has happened &#129300 
+                    ...it is possible that the application is not installed, and there is no Internet at the same time.`, {
                         headers: { "Content-Type": "text/html" }
                     })));
-            };
+            }
 
         }
 

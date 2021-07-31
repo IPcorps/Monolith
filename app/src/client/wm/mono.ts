@@ -234,11 +234,9 @@ export namespace MONO {
 
     // Setting the icon for displaying the online/offline mode of the application
     async function setIcon(path: string) {
-        const el = document.querySelector<HTMLAnchorElement>("link[rel='icon']")!;
-        el.rel = "icon";
+        const el = document.querySelector("link[rel='icon']") as HTMLAnchorElement;
         el.href = path;
-        el.type = "image/x-icon";
-        document.getElementsByTagName("head")[0]!.appendChild(el);
+        document.head.appendChild(el);
     }
 
     // ================================================================================================

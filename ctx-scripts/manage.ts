@@ -30,6 +30,7 @@ function invertMode() {
     let settings = JSON.parse(fs.readFileSync(setPath).toString());
     settings.devMode = !settings.devMode;
     iconMode.text = settings.devMode ? "DEV" : "PROD";
+    iconMode.backgroundColor = settings.devMode ? new ThemeColor("statusBarItem.errorBackground") : undefined;
     fs.writeFileSync(setPath, JSON.stringify(settings, null, "\t"));
 }
 
@@ -51,6 +52,7 @@ export function activate() {
     iconMode.tooltip = "Switching the development mode";
     iconMode.command = commandIdMode;
     iconMode.text = settings.devMode ? "DEV" : "PROD";
+    iconMode.backgroundColor = settings.devMode ? new ThemeColor("statusBarItem.errorBackground") : undefined;
     iconMode.show();
 
 }

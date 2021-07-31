@@ -82,6 +82,17 @@ import { MONO } from "./wm/mono";
     // Getting an object of information about the application and quotas
     // (to transfer additional data to the application, they can be included in the info.json file.
     // They will become available after the next resource update in the object received by calling MONO.getInfo())
-    console.log(await MONO.getInfo());
+
+    // Getting data from the info file
+    const infoBlob = await MONO.get("info.json");
+    const infoText = await infoBlob.text();
+    const infoObject = await JSON.parse(infoText);
+    // Getting data about the storage
+    const storData = await navigator.storage.estimate();
+    // Getting data about the size of resources without metadata
+    const sizeRes = MONO.paramsUpd.sizeRes;
+
+    // Displaying information about the application
+    console.log(({ ...infoObject, ...storData, sizeRes }));
 
 })();

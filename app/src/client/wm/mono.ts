@@ -232,12 +232,6 @@ export namespace MONO {
         navigator.storage.persist().then(() => navigator.serviceWorker.register("sw.js"));
     }
 
-    // Object of application information and storage quotas
-    export function getInfo() {
-        return get("info.json").then(blob => blob.text()).then(JSON.parse)
-            .then(oInfo => navigator.storage.estimate().then(data => ({ ...oInfo, ...data, sizeRes: paramsUpd.sizeRes })));
-    }
-
     // Setting the icon for displaying the online/offline mode of the application
     async function setIcon(path: string) {
         const el: HTMLAnchorElement = document.querySelector("link[rel='icon']")!;

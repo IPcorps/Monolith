@@ -21,7 +21,7 @@ exports.change = (path, client) => {
         .on("error", console.log);                                                              // For oops caught a mistake 🙀
 
     tsRes.js
-        .pipe(new stream.Transform({                                             // Deleting the specified line during compilation
+        .pipe(new stream.Transform({                                                            // Deleting the specified line during compilation
             objectMode: true,
             transform(file, _, cb) {
                 file.contents = Buffer.from(file.contents.toString().replace(/^.*-DEL$/mg, ""));

@@ -21,13 +21,13 @@ exports.change = (path, client) => {
         .on("error", console.log);                                                              // For oops caught a mistake 🙀
 
     tsRes.js
-        .pipe(gulpIf(client, new stream.Transform({                                             // Delete import
+        .pipe(new stream.Transform({                                             // Deleting the specified line during compilation
             objectMode: true,
             transform(file, _, cb) {
-                file.contents = Buffer.from(file.contents.toString().replace(/^import.*$/mg, ""));
+                file.contents = Buffer.from(file.contents.toString().replace(/^.*-DEL$/mg, ""));
                 cb(null, file);
             }
-        })))
+        }))
         // .pipe(gulp.dest("."))                                                                // Saving an intermediate file
         .pipe(gulpIf(gSettings.miniTs, gulpTerser()))                                           // Javascript minifier and ... what else you want
         // .pipe(gulpRename({ extname: ".m.js" }))                                              // Output file extension

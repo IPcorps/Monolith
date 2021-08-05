@@ -3,7 +3,7 @@
  * APPLICATION SCRIPT (CLIENT)
  */
 
-import { MONO } from "./wm/mono";
+import { MONO } from "./wm/mono"; // -DEL
 
 // ACCESS TO LIFECYCLE STAGES WITH APPLICATION INITIALIZATION ===
 

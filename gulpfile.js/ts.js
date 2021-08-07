@@ -5,7 +5,7 @@ const gulp = require("gulp"),
     gulpTerser = require("gulp-terser"),
     gulpRename = require("gulp-rename"),
     gulpIf = require("gulp-if"),
-    gulpdel = require("gulp-del-lines"),
+    gulpDel = require("gulp-del-lines"),
     fs = require("fs");
 
 // Preparation for acceleration
@@ -21,7 +21,7 @@ exports.change = (path, client) => {
         .on("error", console.log);                                                              // For oops caught a mistake 🙀
 
     tsRes.js
-        .pipe(gulpdel)                                                                          // Deleting the specified line during compilation
+        .pipe(gulpDel)                                                                          // Deleting the specified line during compilation
         // .pipe(gulp.dest("."))                                                                // Saving an intermediate file
         .pipe(gulpIf(gSettings.miniTs, gulpTerser()))                                           // Javascript minifier and ... what else you want
         // .pipe(gulpRename({ extname: ".m.js" }))                                              // Output file extension

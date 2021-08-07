@@ -5,8 +5,8 @@ const gulp = require("gulp"),
     gulpTerser = require("gulp-terser"),
     gulpRename = require("gulp-rename"),
     gulpIf = require("gulp-if"),
-    fs = require("fs"),
-    stream = require("stream");
+    gulpdel = require("gulp-del-lines"),
+    fs = require("fs");
 
 // Preparation for acceleration
 const tsProject_C = gulpTypescript.createProject("./tsconfig.json", { module: "ESNext" }),
@@ -21,13 +21,7 @@ exports.change = (path, client) => {
         .on("error", console.log);                                                              // For oops caught a mistake 🙀
 
     tsRes.js
-        .pipe(new stream.Transform({                                                            // Deleting the specified line during compilation
-            objectMode: true,
-            transform(file, _, cb) {
-                file.contents = Buffer.from(file.contents.toString().replace(/^.*-DEL$/mg, ""));
-                cb(null, file);
-            }
-        }))
+        .pipe(gulpdel)                                                                          // Deleting the specified line during compilation
         // .pipe(gulp.dest("."))                                                                // Saving an intermediate file
         .pipe(gulpIf(gSettings.miniTs, gulpTerser()))                                           // Javascript minifier and ... what else you want
         // .pipe(gulpRename({ extname: ".m.js" }))                                              // Output file extension

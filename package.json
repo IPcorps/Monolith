@@ -6,7 +6,7 @@
   "scripts": {
     "rde": "gulp watcher"
   },
-  "author": "IPcorp",
+  "author": "Igor (IPcorp) Patievich",
   "license": "MIT",
   "engines": {
     "node": ">=14.17.1 <15"
@@ -21,7 +21,7 @@
     "@types/vscode": "^1.59.0",
     "browser-sync": "^2.27.5",
     "gulp": "^4.0.2",
-    "gulp-del-lines": "^1.0.3",
+    "gulp-del-lines": "^1.0.4",
     "gulp-if": "^3.0.0",
     "gulp-markdown-github-style": "^1.1.1",
     "gulp-rename": "^2.0.0",

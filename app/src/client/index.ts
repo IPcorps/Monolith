@@ -79,6 +79,8 @@ import { MONO } from "./wm/mono"; // -DEL
 
     // >>> FROM THIS MOMENT ON, THE ENVIRONMENT IS RELEVANT AND THE APPLICATION CODE CAN BE WRITTEN <<<
 
+    console.log("Start the application (client)");
+
     // Getting an object of information about the application and quotas
     // (to transfer additional data to the application, they can be included in the info.json file.
     // They will become available after the next resource update in the object received by calling MONO.getInfo())

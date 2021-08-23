@@ -91,14 +91,16 @@ export namespace MONO {
         dxMono.version(1).stores({ monoRes: "n" });
 
         const arrMap = await dxMono.table<IMap>("monoRes").toArray();
+        const arrMapL = arrMap.length;
         const arrMeta = paramsWS.arrMeta as IMap[];
+        const arrMetaL = arrMeta.length;
 
         begin:
-        for (let i = arrMap.length - 1; i >= 0; i--) {
+        for (let i = arrMapL - 1; i >= 0; i--) {
 
             const elMap = arrMap[i]!;
 
-            for (let j = arrMeta.length - 1; j >= 0; j--) {
+            for (let j = arrMeta.length - 1; j >= 0; j--) { // Not arrMetaL because splice
 
                 const elMeta = arrMeta[j]!;
 
@@ -126,7 +128,7 @@ export namespace MONO {
 
             // There are no matches, set the status in Map to delete,
             // if the arrMeta has no length, the application is in development mode or offline
-            elMap.e = arrMeta.length ? eStatus.DELETE : eStatus.DONE;
+            elMap.e = arrMetaL ? eStatus.DELETE : eStatus.DONE;
 
         }
 

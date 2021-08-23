@@ -169,7 +169,7 @@ export namespace MONO {
             const tblMonoRes = dxMono.table<Partial<IMap>>("monoRes");
             paramsUpd.sizeUpd = paramsDX.sizeUpd;
 
-            paramsDX.arrMap.forEach(async (el, i, arr) => {
+            paramsDX.arrMap.map((el, i, arr) => async () => {
 
                 if (el.e !== eStatus.DELETE) paramsUpd.sizeRes += el.s;
 
@@ -190,7 +190,7 @@ export namespace MONO {
                     res("OK")
                 };
 
-            });
+            }).reduce((pre, cur) => pre.then(cur), Promise.resolve());
 
             if (!paramsDX.arrMap.length) rej(">>> Development mode or there is no data in IndexedDB");
 

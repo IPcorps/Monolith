@@ -9,11 +9,9 @@ import mWsUpd from "./wsUpd";
 
 export function create(sHTTP: mHttp.Server, init: (sHTTP: mHttp.Server, sWS: mSocketIO.Server, socket: mSocketIO.Socket) => void) {
     const sWS = new mSocketIO.Server(sHTTP);
-    sWS.on("connect", (socket: mSocketIO.Socket) => {
-        setTimeout(() => {
-            mWsUpd(sWS, socket);
-            init(sHTTP, sWS, socket);
-        }, 100);
+    sWS.on("connection", (socket: mSocketIO.Socket) => {
+        mWsUpd(sWS, socket);
+        init(sHTTP, sWS, socket);
     });
     return sWS;
 }

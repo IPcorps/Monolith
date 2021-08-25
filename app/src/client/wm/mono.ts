@@ -11,9 +11,7 @@ export namespace MONO {
 
     // Connection socket
     export import mWS = mSio;
-    export const wsMono = mSio.io({
-        reconnection: false
-    });
+    export const wsMono = mSio.io();
 
     // Wrapper for IndexedDB
     export import mDX = mDexie;
@@ -44,6 +42,7 @@ export namespace MONO {
                 paramsWS.online = true;
                 console.log(">>> The socket is connected");
                 setIcon("ico/on.ico");
+                res(wsMono);
             });
 
             // No connection, offline mode
@@ -53,14 +52,23 @@ export namespace MONO {
                 setIcon("ico/off.ico");
             });
 
-            // The first data of the server response: the operating mode and the resource map
-            wsMono.on("upds:createMap", (pDevMode: boolean, pArrMeta: IMeta[]) => {
+        })
+
+    }
+
+    // Getting update metadata from the server
+    export async function wsGetUpdMeta(): Promise<IMeta[]> {
+
+        return new Promise((res, _rej) => {
+
+            // Requesting application update metadata
+            wsMono.emit("updc:getMap", (pDevMode: boolean, pArrMeta: IMeta[]) => {
                 paramsWS.devMode = pDevMode;
                 paramsWS.arrMeta = pArrMeta;
-                res(wsMono);
+                res(pArrMeta);
             });
 
-        })
+        });
 
     }
 
@@ -189,7 +197,7 @@ export namespace MONO {
                 if (i == arr.length - 1) {
                     if (paramsWS.online && !paramsWS.devMode)
                         console.log(">>> The application update process is completed");
-                    res("OK")
+                    res("OK");
                 };
 
             }).reduce((pre, cur) => pre.then(cur), Promise.resolve());
@@ -214,9 +222,9 @@ export namespace MONO {
 
     // Getting a file from IndexedDB
     export function getIdb(path: string) {
-        return new Promise<Blob>(res => {
+        return new Promise<Blob | undefined>(res => {
             dxMono.table("monoRes").get(path)
-                .then((obj: IMap) => res(obj.d));
+                .then((obj: IMap) => res(obj ? obj.d : undefined));
         });
     }
 

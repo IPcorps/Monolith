@@ -23,12 +23,23 @@ import MONO from "./wm/mono"; // -DEL
     // 2. Here it also becomes possible to use:
     //      - MONO.wsMono or the returned result for requests to the resource server via the Mono working socket
     //      - MONO.paramsWS an object with data received from the server
-    //          - MONO.paramsWS.devMode to get the application operation mode (development/production)
-    console.log("MONO.paramsWS.devMode:", MONO.paramsWS.devMode);
     //          - MONO.paramsWS.online network availability
     console.log("MONO.paramsWS.online:", MONO.paramsWS.online);
-    //          - MONO.paramsWS.arrMetaFiles full map of server resource metadata (IMeta[])
-    console.log("MONO.paramsWS.arrMeta:", MONO.paramsWS.arrMeta);
+
+    // Getting the update metadata
+    if (ws) {
+
+        // @ts-ignore
+        const wsArrMeta = await MONO.wsGetUpdMeta().catch(console.log);
+        console.log("ws: metadata received for updating");
+
+        // 3. Additionally available for use:
+        //          - MONO.paramsWS.devMode to get the application operation mode (development/production)
+        console.log("MONO.paramsWS.devMode:", MONO.paramsWS.devMode);
+        //          - MONO.paramsWS.arrMetaFiles full map of server resource metadata (IMeta[])
+        console.log("MONO.paramsWS.arrMeta:", MONO.paramsWS.arrMeta);
+
+    }
 
     /**
      * STEP 2. READING (CREATING) A MONO INDEXEDDB DATABASE AND UPDATING (CREATING) A RESOURCE MAP WITH A STATUS FLAG
@@ -36,13 +47,14 @@ import MONO from "./wm/mono"; // -DEL
     // @ts-ignore
     const dx = await MONO.initDX().catch(console.log);
 
-    // 3. Here it also becomes possible to use:
+    // 4. Here it also becomes possible to use:
     //      - MONO.dxMono or the returned result for accessing the mono database, which is called "Mono"
     //      - MONO.paramsDX intermediate data object
     //          - MONO.paramsDX.arrMap array of metadata prepared for updating
     console.log("MONO.paramsDX.arrMap:", MONO.paramsDX.arrMap);
     //          - MONO.paramsDX.sizeUpd the size of the downloaded data during the update
     console.log("MONO.paramsDX.sizeUpd:", MONO.paramsDX.sizeUpd);
+
 
     /**
      * STEP 3. THE APPLICATION UPDATE PROCESS
@@ -53,7 +65,7 @@ import MONO from "./wm/mono"; // -DEL
 
         console.log(`Received ${sizeProgress} out of ${sizeUpd}`);
 
-        // 4. Direct access to the download progress variables is also possible here
+        // 5. Direct access to the download progress variables is also possible here
         //      - MONO.paramsUpd.sizeProgress the current amount of downloaded data
         console.log("MONO.paramsUpd.sizeProgress:", MONO.paramsUpd.sizeProgress);
         //      - MONO.paramsUpd.sizeUpd total amount of data to download
@@ -65,9 +77,10 @@ import MONO from "./wm/mono"; // -DEL
     // @ts-ignore
     const upd = await MONO.updateMono().catch(console.log);
 
-    // 5. Here the updated data in indexeddb becomes available, and in addition:
+    // 6. Here the updated data in indexeddb becomes available, and in addition:
     //      - MONO.paramsUpd.sizeRes the size of resources in IndexedDB (excluding overhead)
     console.log("MONO.paramsUpd.sizeRes:", MONO.paramsUpd.sizeRes);
+
 
     /**
      * STEP 4. SETTING UP A SERVICE WORKER
@@ -87,14 +100,16 @@ import MONO from "./wm/mono"; // -DEL
 
     // Getting data from the info file
     const infoBlob = await MONO.get("info.json");
-    const infoText = await infoBlob.text();
-    const infoObject = await JSON.parse(infoText);
-    // Getting data about the storage
-    const storData = await navigator.storage.estimate();
-    // Getting data about the size of resources without metadata
-    const sizeRes = MONO.paramsUpd.sizeRes;
+    if (infoBlob) {
+        const infoText = await infoBlob.text();
+        const infoObject = await JSON.parse(infoText);
+        // Getting data about the storage
+        const storData = await navigator.storage.estimate();
+        // Getting data about the size of resources without metadata
+        const sizeRes = MONO.paramsUpd.sizeRes;
 
-    // Displaying information about the application
-    console.log(({ ...infoObject, ...storData, sizeRes }));
+        // Displaying information about the application
+        console.log(({ ...infoObject, ...storData, sizeRes }));
+    }
 
 })();

@@ -14,7 +14,10 @@ import * as mMime from "./mime";
 export default function (_sWS: mSocketIO.Server, socket: mSocketIO.Socket) {
 
     // Sending resource metadata and the development flag
-    socket.emit("upds:createMap", mAppSettings.settings.devMode, mResourcMap.arrMetaFiles);
+    socket.on("updc:getMap",
+        (res: (pDevMode: boolean, pArrMeta: mResourcMap.IMetaFile[]) => void) => {
+            res(mAppSettings.settings.devMode, mResourcMap.arrMetaFiles);
+        });
 
     // Sending the requested file to the client
     socket.on("updc:getFile",

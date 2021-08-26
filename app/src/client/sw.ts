@@ -34,6 +34,7 @@ function getRes(path: string) {
                             res(new Response(data, {
                                 headers: { "Content-Type": blob.type }
                             }));
+                            db.close();
                         });
                     } else fromNet(path);
                 }

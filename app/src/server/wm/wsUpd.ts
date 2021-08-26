@@ -20,10 +20,14 @@ export default function (_sWS: mSocketIO.Server, socket: mSocketIO.Socket) {
         });
 
     // Sending the requested file to the client
-    socket.on("updc:getFile",
-        (path: string, res: (pRes: ArrayBuffer, pType: string) => void) => {
-            const ext = path.match(/[^.]*$/)?.[0];
-            res(mFs.readFileSync(path), mMime.mime[ext ? ext : ""]!);
-        });
+    socket.on("updc:getFile", (pPath: string) => {
+
+        const sFile = mFs.createReadStream(pPath);
+        sFile.on("data", chunk => socket.emit("upds:retFile", false, chunk));
+        const ext = pPath.match(/[^.]*$/)?.[0];
+        sFile.on("end", () => socket.emit("upds:retFile", true, mMime.mime[ext ? ext : ""]));
+        sFile.on("error", console.log);
+
+    });
 
 }

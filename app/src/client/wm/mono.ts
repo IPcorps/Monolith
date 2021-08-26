@@ -11,7 +11,7 @@ export namespace MONO {
 
     // Connection socket
     export import mWS = mSio;
-    export const wsMono = mSio.io();
+    export const wsMono = mSio.io({ timeout: 6e5 });
 
     // Wrapper for IndexedDB
     export import mDX = mDexie;
@@ -189,8 +189,6 @@ export namespace MONO {
                     el.e === eStatus.INSERT ?
                         await tblMonoRes.add({ n: el.n, s: el.s, t: el.t, d: blob }) :
                         await tblMonoRes.update(el.n, { s: el.s, t: el.t, d: blob });
-                    paramsUpd.sizeProgress += el.s;
-                    if (paramsUpd.cb) paramsUpd.cb(paramsUpd.sizeProgress, paramsUpd.sizeUpd);
 
                 } else if (el.e === eStatus.DELETE) await tblMonoRes.delete(el.n);
 
@@ -212,13 +210,28 @@ export namespace MONO {
 
     // === Loader =====================================================================================
 
-    // Getting a file from the server
-    export function getSrv(path: string) {
+    // Received data objects of read file
+    let dataFile: { data: ArrayBuffer[], res: (v: Blob) => void };
+
+    export function getSrv(pPath: string) {
         return new Promise<Blob>(res => {
-            wsMono.emit("updc:getFile", path, (pRes: ArrayBuffer, pType: string) =>
-                res(new Blob([pRes], { type: pType })));
+            dataFile = { data: [], res: res };
+            wsMono.emit("updc:getFile", pPath);
         });
     }
+
+    wsMono.on("upds:retFile", (flag: boolean, data: unknown) => {
+
+        // If true, it means that the file has been received
+        if (flag) {
+            dataFile.res(new Blob(dataFile.data, { type: data as string }));
+        } else {
+            dataFile.data.push(data as ArrayBuffer);
+            paramsUpd.sizeProgress += (data as ArrayBuffer).byteLength;
+            if (paramsUpd.cb) paramsUpd.cb(paramsUpd.sizeProgress, paramsUpd.sizeUpd);
+        }
+
+    });
 
     // Getting a file from IndexedDB
     export function getIdb(path: string) {

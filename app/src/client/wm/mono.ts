@@ -210,40 +210,43 @@ export namespace MONO {
 
     // === Loader =====================================================================================
 
-    // Received data objects of read file
-    let dataFile: { data: ArrayBuffer[], res: (v: Blob) => void };
+    // Object for collecting data chunks when downloading files
+    const dataFiles: { [path: string]: { data: ArrayBuffer[], res: (v: Blob) => void } } = {};
 
+    // Received data objects of read file
     export function getSrv(pPath: string) {
         return new Promise<Blob>(res => {
-            dataFile = { data: [], res: res };
+            dataFiles[pPath] = { data: [], res: res };
             wsMono.emit("updc:getFile", pPath);
         });
     }
 
-    wsMono.on("upds:retFile", (flag: boolean, data: unknown) => {
+    wsMono.on("upds:retFile", (pPath: string, pFlag: boolean, pData: unknown) => {
 
         // If true, it means that the file has been received
-        if (flag) {
-            dataFile.res(new Blob(dataFile.data, { type: data as string }));
+        if (pFlag) {
+            dataFiles[pPath]!.res(new Blob(dataFiles[pPath]!.data, { type: pData as string }));
+            delete dataFiles[pPath];
         } else {
-            dataFile.data.push(data as ArrayBuffer);
-            paramsUpd.sizeProgress += (data as ArrayBuffer).byteLength;
+            dataFiles[pPath]!.data.push(pData as ArrayBuffer);
+            paramsUpd.sizeProgress += (pData as ArrayBuffer).byteLength;
             if (paramsUpd.cb) paramsUpd.cb(paramsUpd.sizeProgress, paramsUpd.sizeUpd);
         }
 
     });
 
     // Getting a file from IndexedDB
-    export function getIdb(path: string) {
+    export function getIdb(pPath: string) {
         return new Promise<Blob | undefined>(res => {
-            dxMono.table("monoRes").get(path)
+            dxMono.table("monoRes").get(pPath)
                 .then((obj: IMap) => res(obj ? obj.d : undefined));
         });
     }
 
-    // Getting a file depending on the operating mode (development/production)
-    export function get(path: string) {
-        return paramsWS.devMode ? getSrv(path) : getIdb(path);
+    // Downloading a file by name
+    export function get(pPath: string) {
+        return paramsWS.devMode ? getSrv(pPath) : getIdb(pPath);
+
     }
 
     // ================================================================================================

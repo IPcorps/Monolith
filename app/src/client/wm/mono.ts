@@ -255,7 +255,8 @@ export namespace MONO {
 
     // A service worker for launching the application in offline mode
     export function setSW() {
-        navigator.storage.persist().then(() => navigator.serviceWorker.register("sw.js"));
+        if (navigator.storage?.persist) navigator.storage.persist();
+        if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
     }
 
     // Setting the icon for displaying the online/offline mode of the application

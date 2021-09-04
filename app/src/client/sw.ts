@@ -6,17 +6,9 @@ const sw = self as typeof self & ServiceWorkerGlobalScope;
 sw.skipWaiting();
 sw.addEventListener("fetch", (fe: FetchEvent) => {
 
-    const path = new URL(fe.request.url).pathname.substr(1);
-    const arrRes = ["", "manifest.json", "index.css", "mono.js", "index.js", "sw.js",
-        "ico/on.ico", "ico/off.ico", "ico/logo.png", "ico/logo_512.png"];
+    let path = new URL(fe.request.url).pathname.substr(1);
 
-    if (fe.request.method === "GET" && arrRes.includes(path)) fe.respondWith((() => getRes(path))());
-
-});
-
-function getRes(path: string) {
-
-    return new Promise<Response>(res => {
+    fe.respondWith(new Promise<Response>(res => {
 
         if (path === "") path = "index.html";
 
@@ -36,14 +28,14 @@ function getRes(path: string) {
                             }));
                             db.close();
                         });
-                    } else fromNet(path);
+                    } else fromNet(fe.request);
                 }
-            } else fromNet(path);
+            } else fromNet(fe.request);
 
             // Downloading from the Internet
-            function fromNet(path: string) {
+            function fromNet(pPath: Request) {
                 db.close();
-                fetch(path)
+                fetch(pPath)
                     .then(res)
                     .catch(() => res(new Response(`Hmm...something strange has happened &#129300 
                     ...it is possible that the application is not installed, and there is no Internet at the same time.`, {
@@ -53,6 +45,6 @@ function getRes(path: string) {
 
         }
 
-    })
+    }));
 
-}
+});

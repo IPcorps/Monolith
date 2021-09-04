@@ -28,7 +28,7 @@ export function create() {
         let file: Buffer,
             type: string;
 
-        const url = new mURL.URL(req.url!, (fHttps ? "https" : "http") + "://" + req.headers.host);
+        const url = new mURL.URL("http://" + req.headers.host + req.url);
         let pathName = url.pathname;
 
         if (pathName === "/") pathName = "/index.html";

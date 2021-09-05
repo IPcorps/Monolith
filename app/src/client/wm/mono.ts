@@ -32,6 +32,9 @@ export namespace MONO {
         arrMeta: []
     }
 
+    // Flag of the current application loading process
+    let flUpd = true;
+
     // Creating a web socket connection to the resource server and getting a resource map
     export function initWS(): Promise<mWS.Socket> {
 
@@ -50,6 +53,10 @@ export namespace MONO {
                 paramsWS.online = false;
                 rej(">>> Offline mode");
                 setIcon("ico/off.ico");
+            });
+
+            wsMono.io.on("reconnect", () => {
+                if (flUpd) document.location.reload();
             });
 
         })
@@ -195,6 +202,7 @@ export namespace MONO {
                 if (i == arr.length - 1) {
                     if (paramsWS.online && !paramsWS.devMode)
                         console.log(">>> The application update process is completed");
+                    flUpd = false;
                     res("OK");
                 };
 

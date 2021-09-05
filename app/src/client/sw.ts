@@ -33,9 +33,9 @@ sw.addEventListener("fetch", (fe: FetchEvent) => {
             } else fromNet(fe.request);
 
             // Downloading from the Internet
-            function fromNet(pPath: Request) {
+            function fromNet(req: Request) {
                 db.close();
-                fetch(pPath)
+                fetch(req)
                     .then(res)
                     .catch(() => res(new Response(`Hmm...something strange has happened &#129300 
                     ...it is possible that the application is not installed, and there is no Internet at the same time.`, {

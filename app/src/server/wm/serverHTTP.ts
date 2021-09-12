@@ -45,7 +45,7 @@ export function create() {
 
         res.writeHead(200, {
             "Content-Type": type,
-            "Content-Length": file.length,
+            "Content-Length": file.length
         }).end(file);
 
     }).listen(process.env["PORT"] || mAppSettings.settings.port);

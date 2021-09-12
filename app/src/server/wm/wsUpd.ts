@@ -23,10 +23,10 @@ export default function (_sWS: mSocketIO.Server, socket: mSocketIO.Socket) {
     socket.on("updc:getFile", (pPath: string) => {
 
         const sFile = mFs.createReadStream(pPath);
-        sFile.on("data", chunk => socket.emit("upds:retFile", pPath, false, chunk));
         const ext = pPath.match(/[^.]*$/)?.[0];
-        sFile.on("end", () => socket.emit("upds:retFile", pPath, true, mMime.mime[ext ? ext : ""]));
-        sFile.on("error", console.log);
+        sFile.on("data", chunk => socket.emit("upds:retFile", pPath, false, chunk))
+            .on("end", () => socket.emit("upds:retFile", pPath, true, mMime.mime[ext ? ext : ""]))
+            .on("error", console.log);
 
     });
 

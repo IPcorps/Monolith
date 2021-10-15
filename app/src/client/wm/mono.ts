@@ -43,16 +43,16 @@ export namespace MONO {
             // Initializing and connecting a socket
             wsMono.on("connect", () => {
                 paramsWS.online = true;
-                console.log(">>> The socket is connected");
                 setIcon("ico/on.ico");
+                console.log(">>> The socket is connected");
                 res(wsMono);
             });
 
             // No connection, offline mode
             wsMono.on("connect_error", () => {
                 paramsWS.online = false;
-                rej(">>> Offline mode");
                 setIcon("ico/off.ico");
+                rej(">>> Offline mode");
             });
 
             wsMono.io.on("reconnect", () => {
